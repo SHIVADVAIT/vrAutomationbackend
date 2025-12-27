@@ -1,0 +1,21 @@
+name: Lead Sync Automation
+
+on:
+  schedule:
+    # Runs every 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  sync-leads:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Trigger Lead Sync
+        run: |
+          curl -X POST https://backendautomation.vercel.app/api/cron/sync \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+      
+      - name: Log Result
+        run: echo "Lead sync completed at $(date)"
