@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const leadRoutes = require('./routes/leadRoutes');
-const { startAutomation } = require('./automation/syncAutomation');
+const cronRoutes = require('./routes/cronRoutes');
 
 const app = express();
 
@@ -20,6 +20,7 @@ connectDB();
 
 // Routes
 app.use('/api/leads', leadRoutes);
+app.use('/api/cron', cronRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -38,11 +39,6 @@ app.get('/', (req, res) => {
     }
   });
 });
-
-// Start background automation only in non-serverless environment
-if (process.env.NODE_ENV !== 'production') {
-  startAutomation();
-}
 
 // Start server
 const PORT = process.env.PORT || 5000;
